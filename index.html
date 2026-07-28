@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>남영동개발추진위원회 — Namyeong-dong Development Promotion Committee</title>
+  <meta name="description" content="기술로 누군가의 하루를 조금 더 가볍게. 고등학생 넷이 만들고 직접 운영하는 서비스 세 개 — Doumi, BeeTREE, 손가Lock." />
+  <meta property="og:title" content="남영동개발추진위원회" />
+  <meta property="og:description" content="기술로 누군가의 하루를 조금 더 가볍게." />
+  <meta property="og:type" content="website" />
+  <!-- 배포 도메인이 namyeong.dev가 아니라면 아래 두 URL을 바꿔주세요 -->
+  <meta property="og:url" content="https://namyeong.dev/" />
+  <meta property="og:image" content="https://namyeong.dev/assets/img/og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#0B0C70" />
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="assets/img/favicon.svg" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@latest/dist/galmuri.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <noscript>
+    <style>
+      .loader, .cursor { display: none; }
+      [data-load], .ht-word, [data-reveal], .panel-copy > *, .mock,
+      .chat, .chat-action, .mask > *, .stripe-clone .hero-eyebrow,
+      .stripe-clone .hero-sub, .member-photo, .hero-arrow path, .phone-img {
+        opacity: 1 !important;
+        transform: none !important;
+        translate: 0 0 !important;
+        clip-path: none !important;
+        stroke-dashoffset: 0 !important;
+      }
+    </style>
+  </noscript>
+</head>
+<body>
+
+  <!-- ═══════════ Loader ═══════════ -->
+  <div class="loader" id="loader" aria-hidden="true">
+    <svg class="loader-mark" viewBox="0 0 70 62">
+      <path d="M7 7H63L34 55" />
+    </svg>
+  </div>
+
+  <!-- inverting cursor (desktop only, enabled by JS) -->
+  <div class="cursor" id="cursor" aria-hidden="true"><span class="cursor-label" id="cursorLabel">↗</span></div>
+  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+
+  <!-- ═══════════ Nav ═══════════ -->
+  <header class="nav" id="nav" data-theme-now="dark">
+    <a class="nav-logo" href="#top" aria-label="남영동개발추진위원회 — 맨 위로">
+      <svg class="nav-mark" viewBox="0 0 70 62" aria-hidden="true">
+        <path d="M7 7H63L34 55" />
+      </svg>
+      <span class="nav-logo-text">남영동개발추진위원회</span>
+    </a>
+    <nav class="nav-links" aria-label="주요 섹션">
+      <span class="nav-pill" id="navPill" aria-hidden="true"></span>
+      <a href="#projects">프로젝트</a>
+      <a href="#team">팀</a>
+    </nav>
+    <a class="nav-insta" href="https://www.instagram.com/namyeong.dev/" target="_blank" rel="noopener" aria-label="인스타그램 @namyeong.dev">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/>
+      </svg>
+      <span>@namyeong.dev</span>
+    </a>
+    <span class="nav-progress" id="navProgress" aria-hidden="true"></span>
+  </header>
+
+  <main id="top">
+
+    <!-- ═══════════ Hero ═══════════ -->
+    <section class="hero" id="hero" data-theme="dark">
+
+      <div class="hero-stage">
+        <svg class="hero-arrow" viewBox="0 0 70 62" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+          <path d="M7 7H63L34 55" />
+        </svg>
+        <div class="hero-inner">
+          <p class="hero-eyebrow" data-load="1">
+            <span class="hero-eyebrow-dot" aria-hidden="true"></span>
+            Namyeong-dong Development Promotion Committee
+          </p>
+          <h1 class="hero-title" data-load="2">
+            <span class="ht-line"><span class="ht-word">기술로</span> <span class="ht-word">누군가의</span> <span class="ht-word">하루를</span></span>
+            <span class="ht-line"><span class="ht-word">조금</span> <span class="ht-word">더</span> <span class="ht-word">가볍게.</span></span>
+          </h1>
+          <p class="hero-sub" data-load="3">
+            고등학생 넷이 만들고 직접 운영하는 서비스 세 개.
+          </p>
+          <div class="hero-cta" data-load="4">
+            <a class="btn btn-light magnetic" href="#projects">프로젝트 보기</a>
+            <a class="btn btn-ghost-light magnetic" href="https://www.instagram.com/namyeong.dev/" target="_blank" rel="noopener">Instagram ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- signature: the white band inverts everything it crosses,
+           and on desktop it follows the pointer -->
+      <div class="stripe" id="stripe" aria-hidden="true">
+        <div class="stripe-clone">
+          <div class="hero-stage">
+            <svg class="hero-arrow" viewBox="0 0 70 62" preserveAspectRatio="xMidYMid meet">
+              <path d="M7 7H63L34 55" />
+            </svg>
+            <div class="hero-inner">
+              <p class="hero-eyebrow">
+                <span class="hero-eyebrow-dot"></span>
+                Namyeong-dong Development Promotion Committee
+              </p>
+              <p class="hero-title">
+                <span class="ht-line"><span class="ht-word">기술로</span> <span class="ht-word">누군가의</span> <span class="ht-word">하루를</span></span>
+                <span class="ht-line"><span class="ht-word">조금</span> <span class="ht-word">더</span> <span class="ht-word">가볍게.</span></span>
+              </p>
+              <p class="hero-sub">
+                고등학생 넷이 만들고 직접 운영하는 서비스 세 개.
+              </p>
+              <div class="hero-cta" style="visibility: hidden" aria-hidden="true">
+                <span class="btn btn-light">프로젝트 보기</span>
+                <span class="btn btn-ghost-light">Instagram ↗</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-scrollcue" data-load="5" aria-hidden="true">
+        <span>Scroll</span>
+        <span class="hero-scrollcue-bar"></span>
+      </div>
+    </section>
+
+    <!-- ═══════════ Intro ═══════════ -->
+    <section class="intro" data-theme="light">
+      <div class="intro-inner">
+        <p class="sec-eyebrow" data-reveal>WHO WE ARE</p>
+        <p class="intro-copy">
+          <span class="mask" data-reveal><span>학교 끝나고 모여서</span></span>
+          <span class="mask" data-reveal><span>필요한 걸 하나씩 만들었습니다.</span></span>
+        </p>
+      </div>
+
+      <!-- logos drift with scroll velocity and ride a slow wave -->
+      <div class="marquee" id="marquee" aria-hidden="true">
+        <div class="marquee-track" id="marqueeTrack">
+          <div class="marquee-set">
+            <span class="logo"><img class="logo-doumi" src="assets/img/doumi-logo.png" alt="" /></span>
+            <span class="logo"><img class="logo-beetree" src="assets/img/beetree-logo-ink.png" alt="" /><b>BeeTREE</b></span>
+            <span class="logo"><img class="logo-songalock" src="assets/img/songalock-icon.png" alt="" /><b>SONGALOCK</b></span>
+          </div>
+          <div class="marquee-set">
+            <span class="logo"><img class="logo-doumi" src="assets/img/doumi-logo.png" alt="" /></span>
+            <span class="logo"><img class="logo-beetree" src="assets/img/beetree-logo-ink.png" alt="" /><b>BeeTREE</b></span>
+            <span class="logo"><img class="logo-songalock" src="assets/img/songalock-icon.png" alt="" /><b>SONGALOCK</b></span>
+          </div>
+          <div class="marquee-set">
+            <span class="logo"><img class="logo-doumi" src="assets/img/doumi-logo.png" alt="" /></span>
+            <span class="logo"><img class="logo-beetree" src="assets/img/beetree-logo-ink.png" alt="" /><b>BeeTREE</b></span>
+            <span class="logo"><img class="logo-songalock" src="assets/img/songalock-icon.png" alt="" /><b>SONGALOCK</b></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ Projects ═══════════ -->
+    <section class="projects" id="projects" data-theme="light">
+      <div class="projects-head">
+        <p class="sec-eyebrow" data-reveal>PROJECTS</p>
+        <h2 class="sec-title mask" data-reveal><span>만든 것들.</span></h2>
+        <p class="sec-sub" data-reveal>셋 다 저희가 직접 굴리고 있습니다.</p>
+      </div>
+
+      <div class="stack">
+
+        <!-- ── Doumi ── -->
+        <div class="panel-wrap" id="pw-doumi">
+          <article class="panel panel-doumi" data-theme="light" aria-label="Doumi — 공공서비스 AI 에이전트">
+            <div class="panel-grid">
+              <div class="panel-copy">
+                <p class="panel-eyebrow pixel">PUBLIC SERVICE AI AGENT</p>
+                <img class="panel-logo doumi-logo" src="assets/img/doumi-logo.png" alt="Doumi 로고" />
+                <h3 class="panel-title">도움이 필요한 순간,<br />도움이.</h3>
+                <p class="panel-desc">
+                  등본 한 장 떼는 게 왜 이렇게 어려울까요. 디지털이 익숙하지 않은 분들 옆에서
+                  화면을 같이 보면서 다음에 뭘 눌러야 하는지 알려주는 AI입니다.
+                  정부24, KORAIL 같은 곳에서 씁니다.
+                </p>
+                <ul class="panel-tags">
+                  <li>AI Agent</li><li>웹 접근성</li><li>공공서비스</li>
+                </ul>
+                <a class="btn btn-blue magnetic" href="https://doumi.beetree.cc/" target="_blank" rel="noopener">doumi.beetree.cc ↗</a>
+              </div>
+              <div class="panel-visual">
+                <div class="mock mock-doumi tilt" aria-hidden="true">
+                  <div class="mock-browser">
+                    <div class="mb-bar">
+                      <i></i><i></i><i></i>
+                      <span class="mb-url"><span>doumi.beetree.cc</span></span>
+                    </div>
+                    <div class="mb-body">
+                      <div class="chat chat-user">주민등록등본은 어떻게 발급받나요?</div>
+                      <div class="chat chat-typing"><i></i><i></i><i></i></div>
+                      <div class="chat chat-bot">
+                        <b class="pixel">d_oumi</b>
+                        제가 정부24에서 함께 진행해 드릴게요. 화면을 따라와 주세요!
+                      </div>
+                      <div class="chat-action">
+                        <span class="ca-dot"></span>
+                        정부24 · 등본 발급 화면으로 이동 중…
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mock-cursor"></div>
+                </div>
+              </div>
+            </div>
+            <span class="panel-index pixel" aria-hidden="true">01</span>
+          </article>
+        </div>
+
+        <!-- ── BeeTREE ── -->
+        <div class="panel-wrap" id="pw-beetree">
+          <article class="panel panel-beetree" data-theme="dark" aria-label="BeeTREE — 알고리즘 온라인 저지">
+            <div class="panel-grid">
+              <div class="panel-copy">
+                <p class="panel-eyebrow">ALGORITHM ONLINE JUDGE</p>
+                <img class="panel-logo beetree-logo" src="assets/img/beetree-logo-white.png" alt="BeeTREE 로고" />
+                <h3 class="panel-title">꿀벌처럼 성실하게,<br />나무처럼 단단하게.</h3>
+                <p class="panel-desc">
+                  알고리즘 공부하려고 시작했다가 저지를 먼저 만들었습니다.
+                  문제 등록부터 채점, 랭킹까지 전부 저희가 세운 서버에서 돌아갑니다.
+                </p>
+                <ul class="panel-tags">
+                  <li>Online Judge</li><li>알고리즘</li><li>자체 채점 서버</li>
+                </ul>
+                <a class="btn btn-light magnetic" href="https://beetree.cc/" target="_blank" rel="noopener">beetree.cc ↗</a>
+              </div>
+              <div class="panel-visual">
+                <div class="mock mock-beetree tilt" aria-hidden="true">
+                  <div class="judge">
+                    <div class="judge-head">
+                      <img src="assets/img/beetree-logo-white.png" alt="" width="22" height="20" />
+                      <span>BeeTREE Judge</span>
+                      <span class="judge-num mono">#1001 A+B</span>
+                    </div>
+                    <div class="judge-code">
+                      <i style="--w:62%"></i><i style="--w:38%"></i><i style="--w:74%"></i><i style="--w:51%"></i><i style="--w:28%"></i>
+                    </div>
+                    <div class="judge-status">
+                      <div class="js-progress"><i></i></div>
+                      <span class="js-label js-running">채점 중…</span>
+                      <span class="js-label js-accept">정답입니다! <b>100점</b></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <span class="panel-index mono" aria-hidden="true">02</span>
+          </article>
+        </div>
+
+        <!-- ── 손가Lock ── -->
+        <div class="panel-wrap" id="pw-songalock">
+          <article class="panel panel-songalock" data-theme="dark" aria-label="손가Lock — AI 개인정보 보호 카메라 앱">
+            <div class="panel-grid">
+              <div class="panel-copy">
+                <p class="panel-eyebrow">AI PRIVACY CAMERA</p>
+                <img class="panel-logo songalock-logo" src="assets/img/songalock-lockup-en.png" alt="손가Lock (SONGALOCK) 로고" />
+                <h3 class="panel-title">찍는 순간,<br />개인정보는 잠급니다.</h3>
+                <p class="panel-desc">
+                  사진 올리기 전에 뒤에 뭐가 찍혔는지 확인하시나요.
+                  촬영할 때 미리 가리는 <em>사전 보호</em>, 갤러리에 있는 사진을 나중에 가리는
+                  <em>사후 보호</em> — 둘 다 기기 안에서 처리합니다.
+                </p>
+                <ul class="panel-tags">
+                  <li>On-device AI</li><li>개인정보 보호</li><li>카메라 앱</li>
+                </ul>
+                <span class="btn btn-red-ghost coming">Coming Soon</span>
+              </div>
+              <div class="panel-visual">
+                <div class="phones tilt" aria-hidden="true">
+                  <span class="phone-glow"></span>
+                  <img class="phone-img phone-before" src="assets/img/songalock-phone-before.png" alt="" loading="lazy" />
+                  <img class="phone-img phone-after" src="assets/img/songalock-phone-after.png" alt="" loading="lazy" />
+                  <span class="phone-scan"></span>
+                </div>
+              </div>
+            </div>
+            <span class="panel-index mono" aria-hidden="true">03</span>
+          </article>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════ Team ═══════════ -->
+    <section class="team" id="team" data-theme="light">
+      <div class="seal" id="seal" data-reveal aria-hidden="true">
+        <svg viewBox="0 0 200 200">
+          <defs>
+            <path id="sealArc" d="M100,100 m-71,0 a71,71 0 1,1 142,0 a71,71 0 1,1 -142,0" />
+          </defs>
+          <circle class="seal-ring" cx="100" cy="100" r="88" />
+          <circle class="seal-ring" cx="100" cy="100" r="56" />
+          <text class="seal-text">
+            <textPath href="#sealArc" startOffset="0">남영동개발추진위원회 · NAMYEONG-DONG DEVELOPMENT PROMOTION COMMITTEE · </textPath>
+          </text>
+          <path class="seal-mark" d="M7 7H63L34 55" transform="translate(68.5,72) scale(0.9)" />
+        </svg>
+      </div>
+      <div class="team-head">
+        <p class="sec-eyebrow" data-reveal>TEAM</p>
+        <h2 class="sec-title mask" data-reveal><span>위원회 명단.</span></h2>
+        <p class="sec-sub" data-reveal>네 명이 다 합니다.</p>
+      </div>
+      <ul class="team-grid">
+        <li class="member tilt" data-reveal>
+          <div class="member-photo">
+            <img src="assets/team/lee-yunho.jpg" alt="이윤호 프로필 사진" loading="lazy" />
+            <span class="member-mono" aria-hidden="true">윤</span>
+          </div>
+          <div class="member-meta">
+            <span class="member-role member-role-lead">팀장</span>
+            <h3 class="member-name">이윤호</h3>
+            <p class="member-en">Lee Yunho</p>
+          </div>
+        </li>
+        <li class="member tilt" data-reveal>
+          <div class="member-photo">
+            <img src="assets/team/lee-donggeon.jpg" alt="이동건 프로필 사진" loading="lazy" />
+            <span class="member-mono" aria-hidden="true">동</span>
+          </div>
+          <div class="member-meta">
+            <span class="member-role">팀원</span>
+            <h3 class="member-name">이동건</h3>
+            <p class="member-en">Lee Donggeon</p>
+          </div>
+        </li>
+        <li class="member tilt" data-reveal>
+          <div class="member-photo">
+            <img src="assets/team/jeong-sua.jpg" alt="정수아 프로필 사진" loading="lazy" />
+            <span class="member-mono" aria-hidden="true">수</span>
+          </div>
+          <div class="member-meta">
+            <span class="member-role">팀원</span>
+            <h3 class="member-name">정수아</h3>
+            <p class="member-en">Jeong Sua</p>
+          </div>
+        </li>
+        <li class="member tilt" data-reveal>
+          <div class="member-photo">
+            <img src="assets/team/seo-jaeyeon.jpg" alt="서재연 프로필 사진" loading="lazy" />
+            <span class="member-mono" aria-hidden="true">재</span>
+          </div>
+          <div class="member-meta">
+            <span class="member-role">팀원</span>
+            <h3 class="member-name">서재연</h3>
+            <p class="member-en">Seo Jaeyeon</p>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+  </main>
+
+  <!-- ═══════════ Footer ═══════════ -->
+  <footer class="footer" data-theme="dark">
+    <svg class="footer-arrow" data-reveal viewBox="0 0 70 62" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+      <path d="M7 7H63L34 55" />
+    </svg>
+    <div class="footer-top">
+      <p class="footer-kicker" data-reveal>다음에 뭘 만드는지는 여기에 올립니다</p>
+      <a class="footer-insta" data-reveal href="https://www.instagram.com/namyeong.dev/" target="_blank" rel="noopener" aria-label="인스타그램 @namyeong.dev">
+        <span id="footerWord">@namyeong.dev ↗</span>
+      </a>
+    </div>
+    <div class="footer-row">
+      <div class="footer-left">
+        <p class="footer-name">남영동개발추진위원회</p>
+        <p class="footer-en">Namyeong-dong Development Promotion Committee</p>
+      </div>
+      <nav class="footer-links" aria-label="푸터 링크">
+        <a href="#projects">프로젝트</a>
+        <a href="#team">팀</a>
+        <a href="https://www.instagram.com/namyeong.dev/" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://beetree.cc/" target="_blank" rel="noopener">BeeTREE</a>
+        <a href="https://doumi.beetree.cc/" target="_blank" rel="noopener">Doumi</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 남영동개발추진위원회. All rights reserved.</p>
+      <img class="footer-lab" src="assets/img/nexsyslab.svg" alt="nexsyslab" height="16" />
+    </div>
+  </footer>
+
+  <script src="js/main.js" defer></script>
+</body>
+</html>
