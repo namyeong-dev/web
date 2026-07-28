@@ -14,8 +14,31 @@
   }
 
   const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  const vhOf = () => window.innerHeight;
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+
+  /* ── Viewport height, held steady ──
+     Every scroll-driven animation maps against the viewport height. On a phone
+     window.innerHeight changes the instant the URL bar slides away, so reading
+     it live re-maps all of them mid-scroll and the page appears to jump. Only a
+     width change or a big height change is a real resize; anything smaller is
+     browser chrome and gets ignored. */
+  let vwCache = window.innerWidth;
+  let vhCache = window.innerHeight;
+  const vhOf = () => vhCache;
+
+  const remeasureViewport = () => {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    // desktop windows have no disappearing chrome, so every resize is real
+    if (!canHover && w === vwCache && Math.abs(h - vhCache) < 140) return;
+    vwCache = w;
+    vhCache = h;
+  };
+
+  window.addEventListener('orientationchange', () => {
+    // the chrome guard would swallow a rotation, so take it unconditionally
+    setTimeout(() => { vwCache = window.innerWidth; vhCache = window.innerHeight; }, 60);
+  });
 
   /* ── Loader → entrance ── */
   const T0 = performance.now();
@@ -35,17 +58,33 @@
   const navProgress = document.getElementById('navProgress');
   const themed = Array.from(document.querySelectorAll('[data-theme]'));
   let lastY = window.scrollY;
+  let navAnchor = lastY; // where the current direction of travel began
+  let navDir = 0;
 
   const updateNav = (y) => {
-    nav.classList.toggle('nav--scrolled', y > 10);
+    const max = Math.max(0, document.documentElement.scrollHeight - vhOf());
+    // rubber-band overscroll reports positions outside the document, and the
+    // tiny direction flips inside momentum scrolling used to strobe the bar
+    const cy = clamp(y, 0, max);
+    const delta = cy - lastY;
 
-    const delta = y - lastY;
-    if (y > 90 && delta > 5) nav.classList.add('nav--hidden');
-    else if (delta < -5 || y < 90) nav.classList.remove('nav--hidden');
-    lastY = y;
+    nav.classList.toggle('nav--scrolled', cy > 10);
 
-    const max = document.documentElement.scrollHeight - vhOf();
-    navProgress.style.setProperty('--sp', max > 0 ? (y / max).toFixed(4) : '0');
+    if (delta !== 0) {
+      const dir = delta > 0 ? 1 : -1;
+      if (dir !== navDir) {
+        navDir = dir;
+        navAnchor = lastY;
+      }
+      // 14px of sustained travel before the bar commits either way
+      if (cy < 90) nav.classList.remove('nav--hidden');
+      else if (dir > 0 && cy - navAnchor > 14) nav.classList.add('nav--hidden');
+      else if (dir < 0 && navAnchor - cy > 14) nav.classList.remove('nav--hidden');
+    }
+
+    lastY = cy;
+
+    navProgress.style.setProperty('--sp', max > 0 ? (cy / max).toFixed(4) : '0');
 
     // probe point just under the nav bar; last DOM match wins (sticky stacking)
     const probe = 30;
@@ -114,7 +153,9 @@
     mx -= 0.95 + Math.abs(vel) * 0.32;
     if (mx <= -setW) mx += setW;
 
-    const target = clamp(vel * 0.07, -8, 8);
+    // the skew re-rasterises a very wide layer every frame; on touch that lands
+    // squarely on the scroll, so the track just drifts
+    const target = canHover ? clamp(vel * 0.07, -8, 8) : 0;
     skew += (target - skew) * 0.1;
 
     track.style.transform =
@@ -221,14 +262,21 @@
     { passive: true }
   );
 
-  window.addEventListener('resize', requestTick, { passive: true });
+  window.addEventListener(
+    'resize',
+    () => { remeasureViewport(); requestTick(); },
+    { passive: true }
+  );
 
   // continuous loop: marquee drift, stripe wobble, tilt easing, cursor
   const idleLoop = (t) => {
     if (!document.hidden) {
       vel *= 0.92;
       if (!reduced) {
-        updateHero(window.scrollY, t);
+        // the stripe's idle wobble answers the pointer, so on touch it is pure
+        // cost — a full-viewport clip-path recomputed behind every scrolled
+        // frame. Scrolling still drives the band through tick().
+        if (canHover) updateHero(window.scrollY, t);
         updateMarquee();
         updateSeal();
         updateTilt();
@@ -411,11 +459,13 @@
     });
   }
 
-  /* ── Team photo fallback → monogram ── */
+  /* ── Team photos: the frame only exists once a real photo loads ──
+     opt-in rather than opt-out, so a missing file leaves a clean nameplate
+     instead of an empty coloured box */
   document.querySelectorAll('.member-photo img').forEach((img) => {
-    const fail = () => img.closest('.member').classList.add('no-photo');
-    if (img.complete && img.naturalWidth === 0) fail();
-    img.addEventListener('error', fail);
+    const ok = () => img.closest('.member').classList.add('has-photo');
+    if (img.complete && img.naturalWidth > 0) ok();
+    img.addEventListener('load', ok);
   });
 
   /* ── First paint ── */

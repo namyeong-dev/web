@@ -169,7 +169,7 @@
       <div class="projects-head">
         <p class="sec-eyebrow" data-reveal>PROJECTS</p>
         <h2 class="sec-title mask" data-reveal><span>만든 것들.</span></h2>
-        <p class="sec-sub" data-reveal>셋 다 저희가 직접 굴리고 있습니다.</p>
+        <p class="sec-sub" data-reveal>셋 다 저희 손으로 만들고, 지금도 직접 운영합니다.</p>
       </div>
 
       <div class="stack">
@@ -315,11 +315,13 @@
         <h2 class="sec-title mask" data-reveal><span>위원회 명단.</span></h2>
         <p class="sec-sub" data-reveal>네 명이 다 합니다.</p>
       </div>
+      <!-- 사진 칸은 파일이 실제로 로드된 카드에만 생깁니다(js/main.js → .has-photo).
+           그래서 이 이미지들은 lazy로 두면 안 됩니다 — 칸이 숨어 있는 동안에는
+           lazy 이미지가 아예 요청되지 않아서 영영 로드되지 않습니다. -->
       <ul class="team-grid">
         <li class="member tilt" data-reveal>
           <div class="member-photo">
-            <img src="assets/team/lee-yunho.jpg" alt="이윤호 프로필 사진" loading="lazy" />
-            <span class="member-mono" aria-hidden="true">윤</span>
+            <img src="assets/team/lee-yunho.jpg" alt="이윤호 프로필 사진" />
           </div>
           <div class="member-meta">
             <span class="member-role member-role-lead">팀장</span>
@@ -329,8 +331,7 @@
         </li>
         <li class="member tilt" data-reveal>
           <div class="member-photo">
-            <img src="assets/team/lee-donggeon.jpg" alt="이동건 프로필 사진" loading="lazy" />
-            <span class="member-mono" aria-hidden="true">동</span>
+            <img src="assets/team/lee-donggeon.jpg" alt="이동건 프로필 사진" />
           </div>
           <div class="member-meta">
             <span class="member-role">팀원</span>
@@ -340,8 +341,7 @@
         </li>
         <li class="member tilt" data-reveal>
           <div class="member-photo">
-            <img src="assets/team/jeong-sua.jpg" alt="정수아 프로필 사진" loading="lazy" />
-            <span class="member-mono" aria-hidden="true">수</span>
+            <img src="assets/team/jeong-sua.jpg" alt="정수아 프로필 사진" />
           </div>
           <div class="member-meta">
             <span class="member-role">팀원</span>
@@ -351,8 +351,7 @@
         </li>
         <li class="member tilt" data-reveal>
           <div class="member-photo">
-            <img src="assets/team/seo-jaeyeon.jpg" alt="서재연 프로필 사진" loading="lazy" />
-            <span class="member-mono" aria-hidden="true">재</span>
+            <img src="assets/team/seo-jaeyeon.jpg" alt="서재연 프로필 사진" />
           </div>
           <div class="member-meta">
             <span class="member-role">팀원</span>

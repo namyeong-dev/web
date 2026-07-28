@@ -1344,26 +1344,41 @@ body.loaded .ht-word { opacity: 1; transform: none; filter: blur(0); }
   gap: clamp(14px, 2vw, 26px);
 }
 
-.member { display: grid; gap: 14px; }
+/* a nameplate, not a photo card — the roster reads on its own */
+.member {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding: 20px 18px 22px;
+  border: 1px solid var(--hairline-light);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(11, 12, 112, 0.04), rgba(11, 12, 112, 0) 62%);
+  transition: border-color 0.4s var(--ease), box-shadow 0.5s var(--ease);
+}
 
-/* the card tilts toward the pointer (--rx/--ry come from the tilt engine)
-   while the photo inside lifts on hover */
+/* the card tilts toward the pointer (--rx/--ry come from the tilt engine) */
 .member.revealed {
   transform: perspective(800px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
 }
 
-.member-photo {
-  position: relative;
-  aspect-ratio: 1 / 1.16;
-  border-radius: 16px;
-  overflow: hidden;
-  transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease);
+.member:hover {
+  border-color: rgba(11, 12, 112, 0.22);
+  box-shadow: 0 18px 40px rgba(11, 12, 112, 0.11);
 }
 
-.member:nth-child(1) .member-photo { background: linear-gradient(150deg, #0B0C70, #0103C8); }
-.member:nth-child(2) .member-photo { background: linear-gradient(150deg, #10119A, #3A3AE0); }
-.member:nth-child(3) .member-photo { background: linear-gradient(150deg, #060740, #0B0C70); }
-.member:nth-child(4) .member-photo { background: linear-gradient(150deg, #0103C8, #6A6AF0); }
+/* the frame only exists once a real photo loads (JS adds .has-photo) —
+   see README for the file names */
+.member-photo { display: none; }
+
+.member.has-photo .member-photo {
+  display: block;
+  position: relative;
+  aspect-ratio: 1 / 1.16;
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(150deg, var(--blue), var(--doumi));
+}
 
 /* curtain wipe on reveal */
 .member-photo::after {
@@ -1387,31 +1402,12 @@ body.loaded .ht-word { opacity: 1; transform: none; filter: blur(0); }
   z-index: 2;
 }
 
-.member.no-photo .member-photo img { display: none; }
-
-.member-mono {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  font-size: clamp(2.2rem, 4.4vw, 3.4rem);
-  font-weight: 800;
-  color: rgba(255, 255, 255, 0.92);
-  z-index: 1;
-}
-
-.member:hover .member-photo {
-  transform: translateY(-8px);
-  box-shadow: 0 22px 44px rgba(11, 12, 112, 0.2);
-}
-
 .member:hover .member-photo img { transform: scale(1.055); }
 
 .member-meta {
   display: grid;
   gap: 2px;
   justify-items: start;
-  padding: 0 2px;
 }
 
 .member-role {
@@ -1606,25 +1602,120 @@ body.loaded .ht-word { opacity: 1; transform: none; filter: blur(0); }
 }
 
 @media (max-width: 760px) {
-  .nav { height: 54px; gap: 14px; }
+  .nav {
+    height: 54px;
+    gap: 12px;
+    /* landscape notches bite into the sides */
+    padding-left: max(18px, env(safe-area-inset-left));
+    padding-right: max(18px, env(safe-area-inset-right));
+  }
+
   .nav-insta span { display: none; }
-  .nav-insta { padding: 8px 10px; border: 0; }
-  .nav-logo-text { font-size: 12px; }
-  .nav-links { gap: 16px; font-size: 13px; }
+  .nav-insta { padding: 10px; border: 0; }
+  .nav-logo { gap: 8px; }
+  .nav-logo-text { font-size: 11.5px; }
+  .nav-mark { width: 18px; }
+  .nav-links { gap: 14px; font-size: 13px; }
+  /* the pill is a hover affordance; on touch it only shrinks the tap targets */
+  .nav-pill { display: none; }
+  .nav-links a { padding: 12px 4px; }
+
+  section { scroll-margin-top: 54px; }
 }
 
 @media (max-width: 600px) {
-  .nav-logo-text { display: none; }
+  .hero-stage { padding: 96px 20px 104px; }
+
+  /* the eyebrow wraps here, and as a flex row that stranded the dot at the
+     far left of a full-width line — inline flow keeps it with the text */
+  .hero-eyebrow {
+    display: block;
+    line-height: 1.75;
+    letter-spacing: 0.22em;
+  }
+
+  .hero-eyebrow-dot {
+    display: inline-block;
+    vertical-align: middle;
+    margin: -2px 8px 0 0;
+  }
+
+  /* one size down so "기술로 누군가의 하루를" holds its own line */
+  .hero-title { font-size: clamp(1.8rem, 8.6vw, 2.25rem); }
+  .hero-sub { font-size: 1rem; max-width: 24em; }
+  .hero-cta { gap: 10px; }
+  .hero-cta .btn { padding: 13px 20px; font-size: 14.5px; }
+  .stripe { --sh: clamp(96px, 15vh, 140px); }
+
+  .intro { padding-left: 20px; padding-right: 20px; }
+  .projects-head { padding-left: 20px; padding-right: 20px; }
+  .panel-grid { padding-top: 84px; padding-bottom: 72px; gap: 32px; }
+  .panel-tags { margin-bottom: 26px; }
+  .panel-logo { margin-bottom: 20px; }
+
   /* tuck the seal into the corner so it clears the centred heading */
   .seal { top: 58px; width: 74px; }
   /* centred type leaves no room beside it — drop the arrow below the copy */
   .hero-arrow { width: 74vw; top: auto; bottom: -6vh; left: -26vw; opacity: 0.16; }
+
+  .team { padding-left: 20px; padding-right: 20px; }
+  .footer { padding-left: 20px; padding-right: 20px; }
+  .footer-row { flex-direction: column; gap: 26px; padding-bottom: 36px; }
+  .footer-links { gap: 14px 20px; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; gap: 14px; }
 }
 
 @media (max-width: 470px) {
-  .team-grid { grid-template-columns: repeat(2, 1fr); max-width: 340px; }
-  .hero-cta .btn { padding: 13px 22px; font-size: 14px; }
-  .footer-row { flex-direction: column; }
+  .team-grid { grid-template-columns: repeat(2, 1fr); max-width: 400px; gap: 12px; }
+  .member { padding: 16px 14px 18px; border-radius: 15px; }
+  .member-name { font-size: 16px; }
+  .marquee { margin-top: clamp(64px, 10vh, 110px); }
+  .logo { --h: 74px; }
+  .marquee-set { gap: 34px; padding-right: 34px; }
+}
+
+/* 375px is a real and common phone, so everything above has to survive it —
+   only below that does the layout give things up */
+@media (max-width: 344px) {
+  /* the wordmark no longer fits beside the links */
+  .nav-logo-text { display: none; }
+  .hero-cta { flex-direction: column; align-items: stretch; }
+  .team-grid { grid-template-columns: 1fr; max-width: 260px; }
+}
+
+/* ═══════════ Touch devices ═══════════ */
+/* Everything below is scroll cost with no payoff where there is no pointer:
+   a live backdrop blur under a fixed bar, permanent compositor layers for a
+   tilt that never fires, and three ambient loops repainting behind the
+   scroll. Dropping them is what stops the stutter. */
+@media (hover: none) {
+  .nav--scrolled[data-theme-now='dark'] {
+    background: rgba(11, 12, 60, 0.94);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .nav--scrolled[data-theme-now='light'] {
+    background: rgba(255, 255, 255, 0.95);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  /* these only transform under a pointer tilt that never happens here —
+     the marquee keeps its layer, it really does move every frame */
+  .mock, .phones { will-change: auto; }
+
+  .panel-visual { animation: none; }
+  .logo { animation: none; }
+  .panel-songalock.in .phone-glow { animation: none; opacity: 0.9; }
+  .phone-glow { filter: blur(32px); }
+  /* the sweep stays — only its 26px halo, repainted every frame, goes */
+  .phone-scan { box-shadow: 0 0 10px 2px rgba(223, 49, 52, 0.4); }
+
+  .member:hover {
+    border-color: var(--hairline-light);
+    box-shadow: none;
+  }
 }
 
 /* ═══════════ QA mode: everything in final state ═══════════ */
