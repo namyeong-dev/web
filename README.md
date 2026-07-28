@@ -73,7 +73,10 @@ python3 -m http.server 4173
 - 폰트: Pretendard Variable + Galmuri11 (jsDelivr CDN).
 - `assets/img/beetree-logo-ink.png`는 흰 배경용으로 만든 BeeTREE 마크입니다.
   원본(`beetree-logo-white.png`)의 명도를 반전시킨 것이라, 원본이 바뀌면 다시 만들어야 합니다.
-- 손가Lock 패널의 아이폰 목업은 `디자인/songalock/iPhone01·02.png`를 그대로 씁니다.
+- 디자인 원본 폴더(`디자인/`)는 저장소에 올리지 않습니다(`.gitignore`).
+  사이트가 실제로 쓰는 이미지는 전부 `assets/img/`에 복사되어 있어서,
+  저장소만 클론해도 사이트는 그대로 돕니다.
+- 손가Lock 패널의 아이폰 목업은 원본 `iPhone01·02.png`를 그대로 씁니다.
   배경이 투명한 PNG라 다른 화면으로 교체해도 그대로 동작합니다.
 - 두 목업의 여백 비율이 달라서(`iPhone02`는 폰이 이미지의 92%, `iPhone01`은 86%)
   `.phone-before`/`.phone-after`의 `height` 값으로 실제 폰 크기를 맞춰 뒀습니다.
