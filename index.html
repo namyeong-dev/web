@@ -18,7 +18,10 @@
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@latest/dist/galmuri.css" />
-  <link rel="stylesheet" href="css/style.css" />
+  <!-- ?v= 는 캐시 무효화용입니다. 배포는 파일을 덮어쓰기만 하므로(scripts/deploy.sh),
+       이 숫자를 올리지 않으면 재방문자는 예전 CSS/JS를 계속 씁니다. css/js 를
+       고쳤으면 아래 두 곳의 숫자를 같이 올려주세요. -->
+  <link rel="stylesheet" href="css/style.css?v=3" />
   <noscript>
     <style>
       .loader, .cursor { display: none; }
@@ -46,6 +49,23 @@
   <!-- inverting cursor (desktop only, enabled by JS) -->
   <div class="cursor" id="cursor" aria-hidden="true"><span class="cursor-label" id="cursorLabel">↗</span></div>
   <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+
+  <!-- off-site links: the button itself grows into a browser window, borrowing
+       the chrome from the Doumi panel's mockup, before the new tab opens -->
+  <div class="portal" id="portal" aria-hidden="true">
+    <div class="portal-win" id="portalWin">
+      <div class="portal-bar">
+        <i></i><i></i><i></i>
+        <span class="portal-url mono" id="portalUrl"></span>
+      </div>
+      <div class="portal-body">
+        <span class="portal-load"></span>
+        <svg class="portal-mark" viewBox="0 0 70 62" aria-hidden="true">
+          <path d="M7 7H63L34 55" />
+        </svg>
+      </div>
+    </div>
+  </div>
 
   <!-- ═══════════ Nav ═══════════ -->
   <header class="nav" id="nav" data-theme-now="dark">
@@ -417,6 +437,6 @@
     </div>
   </footer>
 
-  <script src="js/main.js" defer></script>
+  <script src="js/main.js?v=3" defer></script>
 </body>
 </html>

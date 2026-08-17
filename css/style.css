@@ -171,6 +171,133 @@ body.loaded .loader { opacity: 0; visibility: hidden; }
 .has-cursor .cursor.idle,
 .has-cursor .cursor.idle ~ .cursor-dot { opacity: 0; }
 
+/* ═══════════ Leaving the site ═══════════ */
+/* The clicked control grows into a browser window — same chrome language as
+   the Doumi panel's mockup — which loads the destination and then hands over
+   to a real tab. JS drives it by writing top/left/width/height straight onto
+   .portal-win: these are laid out rather than transformed on purpose, because
+   a scale would smear the rounded corners and the chrome inside them. It is
+   one fixed element with nothing in flow behind it, so nothing else reflows. */
+.portal {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  /* never blocks the page underneath — the window is a send-off, not a modal */
+  pointer-events: none;
+  /* tied to .on with no transition of its own: a transitioned visibility can
+     be left stranded visible if the tab is throttled mid-fade, and .on outlives
+     the fade-out anyway */
+  visibility: hidden;
+  background: rgba(6, 7, 63, 0);
+  transition: background 0.5s var(--ease);
+}
+
+.portal.on {
+  visibility: visible;
+  background: rgba(6, 7, 63, 0.8);
+  transition: background 0.55s var(--ease);
+}
+
+/* geometry, radius and fill are driven by a Web Animations keyframe pair in
+   js/main.js — explicit from/to values, rather than a CSS transition that has
+   to guess its start from whatever style flush happened to land first.
+   Only the entrance/exit fade stays here. */
+.portal-win {
+  position: fixed;
+  overflow: hidden;
+  opacity: 0;
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.45);
+  transition: opacity 0.18s linear, transform 0.4s var(--ease);
+}
+
+.portal.on .portal-win { opacity: 1; }
+
+.portal-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #EFEFF4;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease);
+}
+
+.portal-bar i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #E3E3E8;
+  flex: none;
+}
+
+.portal-url {
+  margin: 0 auto;
+  font-size: 12px;
+  color: var(--gray);
+  background: var(--paper);
+  padding: 5px 20px;
+  border-radius: 999px;
+  max-width: 70%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.portal-body {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.portal-load {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 2px;
+  width: 0;
+  background: var(--doumi);
+  transition: width 0.72s cubic-bezier(0.22, 0.8, 0.3, 1);
+}
+
+/* the site's mark seeing you out — run off the corner so it stays a mark.
+   Shown small and whole it reads as the numeral 7 (see README), which is why
+   the body clips it rather than centring it. */
+.portal-mark {
+  position: absolute;
+  right: -16%;
+  bottom: 6%;
+  width: 66%;
+  height: auto;
+  fill: none;
+  stroke: var(--blue);
+  stroke-width: 13.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+  translate: 8% 8%;
+  transition: opacity 0.45s var(--ease), translate 0.7s var(--ease);
+}
+
+/* .grow is set one frame after .on, so the browser has a start state to
+   animate away from */
+.portal.grow .portal-bar { opacity: 1; transition-delay: 0.3s; }
+.portal.grow .portal-load { width: 100%; transition-delay: 0.36s; }
+.portal.grow .portal-mark {
+  opacity: 0.1;
+  translate: 0 0;
+  transition-delay: 0.34s;
+}
+
+/* handing back: the window drops away rather than folding back into a button
+   nobody is looking at any more */
+.portal.out { background: rgba(6, 7, 63, 0); }
+
+.portal.out .portal-win {
+  opacity: 0;
+  transform: translateY(16px) scale(0.985);
+}
+
 /* ═══════════ Nav ═══════════ */
 .nav {
   position: fixed;

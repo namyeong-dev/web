@@ -16,6 +16,18 @@
   const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 
+  // a link that actually leaves the site — drives both the ↗ cursor glyph and
+  // the send-off window. In-page anchors and mailto:/tel: are not it.
+  const isExternal = (el) => {
+    if (!el || el.tagName !== 'A' || !el.getAttribute('href')) return false;
+    try {
+      const u = new URL(el.href, location.href);
+      return /^https?:$/.test(u.protocol) && u.origin !== location.origin;
+    } catch {
+      return false;
+    }
+  };
+
   /* ── Viewport height, held steady ──
      Every scroll-driven animation maps against the viewport height. On a phone
      window.innerHeight changes the instant the URL bar slides away, so reading
@@ -408,7 +420,7 @@
           : null;
         cursor.classList.toggle('on', !!hit);
         // only links that leave the site get the arrow glyph
-        cursor.classList.toggle('link', !!(hit && hit.target === '_blank'));
+        cursor.classList.toggle('link', isExternal(hit));
       },
       { passive: true }
     );
@@ -417,6 +429,101 @@
     document.addEventListener('pointerleave', park);
     window.addEventListener('blur', park);
   }
+
+  /* ── Leaving the site: the clicked control becomes a browser window ── */
+  const portal = document.getElementById('portal');
+  const portalWin = document.getElementById('portalWin');
+  const portalUrl = document.getElementById('portalUrl');
+
+  const OPEN_AT = 760; // morph settles, address lands, bar fills — then the tab
+  const HOLD_MS = 1000; // window stays up while the new tab takes over
+  const LIFT_MS = 440; // matches the .out fade
+  let leaving = false;
+
+  let morph = null;
+
+  const resetPortal = () => {
+    portal.className = 'portal';
+    if (morph) morph.cancel();
+    morph = null;
+    leaving = false;
+  };
+
+  const closePortal = () => {
+    portal.classList.add('out');
+    setTimeout(resetPortal, LIFT_MS);
+  };
+
+  document.addEventListener('click', (ev) => {
+    if (leaving || ev.defaultPrevented || ev.button !== 0) return;
+    // cmd/ctrl/shift/middle-click already mean "open this somewhere else"
+    if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) return;
+
+    const a = ev.target.closest && ev.target.closest('a[href]');
+    if (!isExternal(a) || reduced) return;
+
+    ev.preventDefault();
+    leaving = true;
+
+    const r = a.getBoundingClientRect();
+    const bg = getComputedStyle(a).backgroundColor;
+    const href = a.href;
+
+    portalUrl.textContent = new URL(href).hostname.replace(/^www\./, '');
+
+    // starts life as the thing that was clicked — same box, same pill radius,
+    // same fill. A see-through control (the icon links) starts white instead,
+    // otherwise the window would grow up out of nothing.
+    const solid = bg && !/rgba\(.*,\s*0(\.0+)?\)$/.test(bg) && bg !== 'transparent';
+    const w = Math.min(880, window.innerWidth * 0.86);
+    const h = Math.min(560, window.innerHeight * 0.66);
+
+    portal.classList.add('on');
+    if (cursorOn) cursor.classList.add('idle'); // the window takes over
+
+    morph = portalWin.animate(
+      [
+        {
+          left: r.left + 'px',
+          top: r.top + 'px',
+          width: r.width + 'px',
+          height: r.height + 'px',
+          borderRadius: Math.min(r.width, r.height) / 2 + 'px',
+          background: solid ? bg : '#fff',
+        },
+        {
+          left: (window.innerWidth - w) / 2 + 'px',
+          top: (window.innerHeight - h) / 2 + 'px',
+          width: w + 'px',
+          height: h + 'px',
+          borderRadius: '18px',
+          background: '#fff',
+        },
+      ],
+      { duration: 520, easing: 'cubic-bezier(0.62, 0, 0.2, 1)', fill: 'both' }
+    );
+
+    portal.classList.add('grow');
+
+    setTimeout(() => {
+      // 'noopener' as a feature string makes open() return null even when it
+      // worked, so the flag goes on afterwards and null really means blocked
+      const tab = window.open(href, '_blank');
+      if (tab) {
+        tab.opener = null;
+        setTimeout(closePortal, HOLD_MS);
+      } else {
+        // Safari can refuse an open() this far from the gesture. The window is
+        // already up and loading, so finishing the trip in this tab is the
+        // graceful way out — better than a window that closes on nothing.
+        location.href = href;
+      }
+    }, OPEN_AT);
+  });
+
+  // the back button restores this page exactly as it was left — with the
+  // window still up — so it has to be cleared on the way back in
+  window.addEventListener('pageshow', resetPortal);
 
   function updateCursor() {
     if (!cursorOn) return;
