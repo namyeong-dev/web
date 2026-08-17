@@ -39,9 +39,14 @@ qa.html               스크린샷 검증용 하네스 (로컬 전용, .gitignor
 
 ## 팀원 프로필 사진 넣기
 
-아래 파일명으로 `assets/team/` 폴더에 넣기만 하면 자동으로 표시됩니다.
-사진이 **실제로 로드된 카드에만** 사진 칸이 생깁니다(`.member.has-photo`). 파일이 없으면
-빈 칸이 남지 않고 이름표만 깔끔하게 보입니다. 권장 비율은 세로형(1:1.16), 500px 이상.
+두 단계입니다. ① `assets/team/` 에 파일을 넣고, ② `index.html` 의 해당 `<li class="member">`
+안 맨 위(`.member-meta` 앞)에 이 한 줄을 붙입니다.
+
+```html
+<div class="member-photo"><img src="assets/team/lee-yunho.jpg" alt="이윤호 프로필 사진" /></div>
+```
+
+칸·둥근 모서리·커튼 연출은 CSS가 알아서 합니다. 권장 비율은 세로형(1:1.16), 500px 이상.
 
 | 파일명 | 팀원 |
 |---|---|
@@ -49,6 +54,13 @@ qa.html               스크린샷 검증용 하네스 (로컬 전용, .gitignor
 | `lee-donggeon.jpg` | 이동건 |
 | `jeong-sua.jpg` | 정수아 |
 | `seo-jaeyeon.jpg` | 서재연 |
+
+`<img>` 를 미리 넣어두고 파일을 나중에 채우는 방식은 쓰지 않습니다. 없는 파일을 브라우저가
+요청해서 콘솔에 404가 남기 때문입니다. 그래서 사진이 없는 사람은 `<img>` 자체를 두지 않습니다.
+
+`loading="lazy"` 도 붙이지 마세요. 사진 칸은 파일이 실제로 로드되기 전까지 `display:none`
+이고(`js/main.js` 가 `.has-photo` 를 붙입니다), 숨어 있는 lazy 이미지는 브라우저가 아예
+요청하지 않아서 영영 안 뜹니다.
 
 ## 로컬에서 보기
 

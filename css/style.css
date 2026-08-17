@@ -342,11 +342,8 @@ body.loaded .loader { opacity: 0; visibility: hidden; }
 .btn-blue { background: var(--doumi); color: #fff; }
 .btn-blue:hover { box-shadow: 0 10px 30px rgba(1, 3, 200, 0.35); }
 
-.btn-red-ghost {
-  border: 1px dashed rgba(223, 49, 52, 0.55);
-  color: var(--red-soft);
-  cursor: default;
-}
+.btn-red { background: var(--red); color: #fff; }
+.btn-red:hover { box-shadow: 0 10px 30px rgba(223, 49, 52, 0.35); }
 
 /* magnetic follow (translate set inline by JS) — every animated property
    stays in one list so the inline value can't drop the others.
@@ -1077,54 +1074,65 @@ body.loaded .ht-word { opacity: 1; transform: none; filter: blur(0); }
   font-weight: 500;
 }
 
-.judge-code { padding: 20px 0 6px; }
+/* ── the solution types itself out while the judge runs ──
+   Each line owns a slice of the panel scrub (--p): --s is where it starts,
+   --d how much scroll it takes, --n how many characters it holds. The line
+   is a fixed-width window over pre-formatted text, widened a character at a
+   time — the same trick the doumi address bar uses.
+   letter-spacing must stay 0: the window is measured in `ch`, and the
+   inherited -0.01em would drift the two apart over a long line. */
+.judge-code {
+  padding: 18px 0 8px;
+  font-size: 12.5px;
+  line-height: 1.62;
+  letter-spacing: 0;
+}
 
-.judge-code i {
+.jc-line {
   position: relative;
   display: block;
-  height: 10px;
-  border-radius: 5px;
-  margin-bottom: 11px;
-  width: var(--w);
-  background: linear-gradient(90deg, #26262C, #33333B);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.7s var(--ease);
+  white-space: pre;
+  color: rgba(255, 255, 255, 0.82);
+  /* how far this line has been typed — the window's width and the caret's
+     position are the same number, so they can never drift apart */
+  --typed: calc(clamp(0, (var(--p, 0) - var(--s)) / var(--d), 1) * var(--n) * 1ch);
 }
 
-/* caret parked at the end of the last line while the judge is still running */
-.judge-code i:last-child::after {
+.jc-win {
+  display: inline-block;
+  overflow: hidden;
+  white-space: pre;
+  vertical-align: bottom;
+  width: var(--typed);
+}
+
+/* The caret sits out of the inline flow on purpose. In flow it would align to
+   the bottom of the line box, which line-height 1.62 leaves well below the
+   text; centring it on the line box puts it on the text instead, and stays
+   right whatever the line-height becomes.
+   It shows at full opacity once its line starts and drops to zero the moment
+   the line finishes, so exactly one caret is ever visible. */
+.jc-line::after {
   content: '';
   position: absolute;
-  right: -9px;
-  top: -2px;
+  left: var(--typed);
+  top: 50%;
+  translate: 0 -50%;
   width: 2px;
-  height: 14px;
+  height: 1.15em;
   background: #F5B301;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  opacity: calc(
+    clamp(0, (var(--p, 0) - var(--s)) / 0.004, 1) -
+    clamp(0, (var(--p, 0) - var(--s) - var(--d)) / 0.004, 1)
+  );
 }
 
-.panel-beetree.in .judge-code i:last-child::after {
-  opacity: 1;
-  animation: caret 1s steps(2, jump-none) infinite;
-}
-
-.panel-beetree.s3 .judge-code i:last-child::after {
-  opacity: 0;
-  animation: none;
-}
-
-@keyframes caret {
-  to { opacity: 0.1; }
-}
-
-.panel-beetree.in .judge-code i { transform: scaleX(1); }
-.panel-beetree.in .judge-code i:nth-child(1) { transition-delay: 0.25s; }
-.panel-beetree.in .judge-code i:nth-child(2) { transition-delay: 0.34s; }
-.panel-beetree.in .judge-code i:nth-child(3) { transition-delay: 0.43s; }
-.panel-beetree.in .judge-code i:nth-child(4) { transition-delay: 0.52s; }
-.panel-beetree.in .judge-code i:nth-child(5) { transition-delay: 0.61s; }
+.jc-pre { color: #F5B301; }
+.jc-key { color: #7FB0FF; }
+.jc-ns  { color: #7FDBCA; }
+.jc-fn  { color: #E5C07B; }
+.jc-str { color: #98C379; }
+.jc-op  { color: rgba(255, 255, 255, 0.5); }
 
 .judge-status {
   position: relative;
@@ -1439,6 +1447,41 @@ body.loaded .ht-word { opacity: 1; transform: none; filter: blur(0); }
   font-weight: 500;
 }
 
+/* not every member has a link, and the leader has two — the row just holds
+   whatever is there. Cards stay level because everything above is identical. */
+.member-links {
+  display: flex;
+  gap: 8px;
+}
+
+.member-link {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--hairline-light);
+  color: var(--gray);
+  transition: color 0.3s var(--ease), border-color 0.3s var(--ease),
+    background 0.3s var(--ease);
+}
+
+/* pads the tap target out to 44px without moving anything */
+.member-link::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+}
+
+.member-link svg { width: 15px; height: 15px; }
+
+.member-link:hover {
+  color: var(--blue);
+  border-color: rgba(11, 12, 112, 0.28);
+  background: rgba(11, 12, 112, 0.06);
+}
+
 /* ═══════════ Footer ═══════════ */
 .footer {
   position: relative;
@@ -1574,10 +1617,10 @@ body.loaded .ht-word { opacity: 1; transform: none; filter: blur(0); }
     grid-template-columns: 1fr;
     gap: 40px;
     padding-top: 96px;
-    padding-bottom: 80px;
+    padding-bottom: 44px;
   }
 
-  /* no room for the sticky stack — let panels flow naturally */
+  /* no room to pin the whole panel — let panels flow naturally */
   .panel-wrap,
   .panel-wrap:last-child { height: auto; }
 
@@ -1590,11 +1633,31 @@ body.loaded .ht-word { opacity: 1; transform: none; filter: blur(0); }
     filter: none;
     border-radius: 24px;
     box-shadow: none;
+    /* overflow:hidden would make this the sticky mock's scrollport and cancel
+       the pin outright; clip crops identically without becoming one */
+    overflow: clip;
   }
 
   .panel-desc { max-width: none; }
 
-  .mock, .phones { max-width: 440px; }
+  /* Unpinned, the whole scrub ran before the mock even reached the screen — by
+     the time it appeared the animation had already finished. So the mock holds
+     still while the rest of this box scrolls past it, and the scroll-driven
+     animation plays against a stationary target: the desktop pin, scaled to a
+     phone.
+     It has to be min-height, not padding: a sticky child may only travel
+     inside its containing block's *content* box, and padding is outside it —
+     as padding this box would give the mock exactly zero room to stick. */
+  .panel-visual {
+    min-height: 118svh;
+    animation: none; /* the float drift would fight the pin */
+  }
+
+  .mock, .phones {
+    position: sticky;
+    top: 14svh;
+    max-width: 440px;
+  }
 
   .panel-index { font-size: 4.6rem; bottom: 12px; }
 
@@ -1649,7 +1712,7 @@ body.loaded .ht-word { opacity: 1; transform: none; filter: blur(0); }
 
   .intro { padding-left: 20px; padding-right: 20px; }
   .projects-head { padding-left: 20px; padding-right: 20px; }
-  .panel-grid { padding-top: 84px; padding-bottom: 72px; gap: 32px; }
+  .panel-grid { padding-top: 84px; padding-bottom: 36px; gap: 32px; }
   .panel-tags { margin-bottom: 26px; }
   .panel-logo { margin-bottom: 20px; }
 
@@ -1741,7 +1804,8 @@ body.loaded .ht-word { opacity: 1; transform: none; filter: blur(0); }
 .qa .footer-arrow path { stroke-dashoffset: 0 !important; }
 .qa .mask > * { transform: none !important; }
 .qa .member-photo::after { transform: translateY(-101%) !important; }
-.qa .judge-code i { transform: scaleX(1) !important; }
+.qa .jc-win { width: calc(var(--n) * 1ch) !important; }
+.qa .jc-line::after { opacity: 0 !important; }
 .qa .js-progress i { width: 100% !important; background: #30D158; }
 .qa .js-running { opacity: 0; }
 .qa .js-accept { opacity: 1 !important; transform: none !important; }
@@ -1779,6 +1843,10 @@ body.loaded .ht-word { opacity: 1; transform: none; filter: blur(0); }
   .footer-arrow path { stroke-dashoffset: 0 !important; }
   .ht-word { filter: none !important; }
   .member-photo::after { transform: translateY(-101%) !important; }
+  /* the typing is driven by scroll position, not a transition, so the rules
+     above can't stop it — the solution just sits there finished instead */
+  .jc-win { width: calc(var(--n) * 1ch) !important; }
+  .jc-line::after { opacity: 0 !important; }
   .chat-typing, .phone-scan, .cursor, .cursor-dot { display: none !important; }
   .seal { rotate: 0deg !important; scale: 1 !important; }
 }

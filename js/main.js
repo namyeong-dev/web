@@ -191,6 +191,9 @@
   /* ── Project panels: scrub progress, steps, stack exit ── */
   const wraps = Array.from(document.querySelectorAll('.panel-wrap'));
   const panels = wraps.map((w) => w.querySelector('.panel'));
+  const visuals = panels.map((p) => p.querySelector('.panel-visual'));
+  // the mock is what actually gets pinned on a phone (.phones on 손가Lock)
+  const stickies = panels.map((p) => p.querySelector('.mock, .phones'));
 
   // same boundary expression as the CSS un-stack media query
   const flowMQ = window.matchMedia('(max-width: 960px)');
@@ -211,8 +214,17 @@
         const total = Math.max(1, r.height - vh);
         p = clamp(-r.top / total, 0, 1);
       } else {
-        // flowing: progress as the panel travels up the viewport
-        p = clamp((vh * 0.8 - r.top) / (vh * 0.9), 0, 1);
+        // phone: the mock is pinned inside its visual, so the room left beneath
+        // it counts the pin down — full travel before it catches, zero once the
+        // visual's bottom pushes it off again. Measured rather than configured,
+        // so retiming the pin is a one-line CSS change.
+        const vis = visuals[i];
+        const stick = stickies[i];
+        const travel = vis.offsetHeight - stick.offsetHeight;
+        const room =
+          vis.getBoundingClientRect().bottom -
+          stick.getBoundingClientRect().bottom;
+        p = travel > 0 ? clamp(1 - room / travel, 0, 1) : 0;
       }
 
       panel.style.setProperty('--p', p.toFixed(4));
