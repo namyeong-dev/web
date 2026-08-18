@@ -1530,8 +1530,9 @@ body.loaded .ht-word { opacity: 1; transform: none; filter: blur(0); }
   display: block;
   position: relative;
   width: 64px;
-  height: 64px;
-  border-radius: 16px;
+  /* README 가 권장하는 세로형 비율 그대로, 크기만 작게 */
+  aspect-ratio: 1 / 1.16;
+  border-radius: 14px;
   overflow: hidden;
   background: linear-gradient(150deg, var(--blue), var(--doumi));
 }
