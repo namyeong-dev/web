@@ -1371,34 +1371,39 @@ body.loaded .ht-word { opacity: 1; transform: none; filter: blur(0); }
    one scene. Measured fill: before 86.3%, after 92.1% of its own canvas — the
    values below cancel that difference out. Re-measure when a mockup changes
    (the alpha bounding box is what matters, not the canvas size). */
+/* the left phone is the one in front: nearer, larger, sitting lower.
+   Rendered size is height x that file's own fill, so the two percentages are
+   not comparable on their own — 92 x 0.863 vs 73 x 0.921 puts the front phone
+   about 18% bigger, which is what reads as depth. */
 .phone-before {
-  left: -6%;
-  top: 0;
-  height: 78%;
-  z-index: 1;
-  translate: 46px 34px;
-  rotate: 5deg;
+  left: -7%;
+  bottom: 0;
+  height: 92%;
+  z-index: 2;
+  translate: 40px 26px;
+  rotate: 4deg;
 }
 
 .phone-after {
-  right: 0;
-  bottom: 0;
-  height: 86%;
-  z-index: 2;
-  translate: -46px -30px;
-  rotate: -5deg;
+  right: -2%;
+  top: 0;
+  height: 73%;
+  z-index: 1;
+  translate: -40px -24px;
+  rotate: -6deg;
 }
 
 .panel-songalock.in .phone-img { opacity: 1; }
 
 .panel-songalock.in .phone-before {
-  translate: calc(var(--p, 0) * -16px) calc(var(--p, 0) * 20px);
-  rotate: calc(var(--p, 0) * -2.5deg);
+  translate: calc(var(--p, 0) * -20px) calc(var(--p, 0) * 16px);
+  rotate: calc(var(--p, 0) * -2deg);
 }
 
+/* the one behind drifts less — parallax, not two phones sliding in step */
 .panel-songalock.in .phone-after {
-  translate: calc(var(--p, 0) * 14px) calc(var(--p, 0) * -18px);
-  rotate: calc(var(--p, 0) * 2deg);
+  translate: calc(var(--p, 0) * 10px) calc(var(--p, 0) * -12px);
+  rotate: calc(var(--p, 0) * 1.4deg);
 }
 
 .phone-glow {
@@ -1543,20 +1548,25 @@ body.loaded .ht-word { opacity: 1; transform: none; filter: blur(0); }
    see README for the file names */
 .member-photo { display: none; }
 
+/* the photo spans the whole card, so everything written about the person
+   lines up on one edge instead of stepping back under the picture */
 .member.has-photo {
   grid-template-columns: auto 1fr;
-  grid-template-areas: 'photo meta' 'work work' 'links links';
+  grid-template-areas:
+    'photo meta'
+    'photo work'
+    'photo links';
+  align-items: start;
 }
-
-.member.has-photo .member-meta { align-self: center; }
 
 /* 카드 폭을 꽉 채우는 세로 사진이 아니라 아바타 크기입니다. 네 명 중 두
    명만 사진이 있어서, 큰 사진이면 카드끼리 높이가 크게 어긋납니다. */
 .member.has-photo .member-photo {
   grid-area: photo;
+  align-self: start;
   display: block;
   position: relative;
-  width: clamp(78px, 8vw, 96px);
+  width: clamp(84px, 8.6vw, 104px);
   aspect-ratio: 1 / 1.16;
   border-radius: 15px;
   overflow: hidden;
@@ -1591,19 +1601,26 @@ body.loaded .ht-word { opacity: 1; transform: none; filter: blur(0); }
 
 .member-meta {
   display: grid;
-  gap: 2px;
-  justify-items: start;
+  grid-template-columns: auto auto;
+  grid-template-areas:
+    'name role'
+    'en   en';
+  justify-content: start;
+  align-items: center;
+  column-gap: 8px;
+  row-gap: 1px;
 }
 
 .member-role {
-  font-size: 10.5px;
+  grid-area: role;
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.14em;
-  padding: 3px 9px;
+  letter-spacing: 0.12em;
+  padding: 3px 8px;
   border-radius: 999px;
   border: 1px solid rgba(0, 0, 0, 0.18);
   color: var(--gray);
-  margin-bottom: 5px;
+  white-space: nowrap;
 }
 
 .member-role-lead {
@@ -1613,12 +1630,14 @@ body.loaded .ht-word { opacity: 1; transform: none; filter: blur(0); }
 }
 
 .member-name {
+  grid-area: name;
   font-size: 17px;
   font-weight: 800;
   letter-spacing: -0.02em;
 }
 
 .member-en {
+  grid-area: en;
   font-size: 12px;
   color: var(--gray);
   font-weight: 500;
