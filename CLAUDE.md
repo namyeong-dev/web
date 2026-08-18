@@ -31,27 +31,61 @@ python3 -m http.server 4173
 deploy-namyeong
 ```
 
-`/usr/local/bin/deploy-namyeong` 에 있고 내용은 fetch + `checkout -f` 입니다.
-`-f` 라서 바뀐 파일은 덮어쓰고 저장소에서 지운 파일은 서버에서도 지워집니다.
-어떤 파일을 올려야 하는지 따질 필요가 없습니다.
+`/usr/local/bin/deploy-namyeong` 에 있고 내용은 fetch + `reset --hard` 입니다.
+브랜치 위치와 작업 파일을 **둘 다** 원격 상태로 맞추기 때문에, 바뀐 파일은
+덮어쓰고 저장소에서 지운 파일은 서버에서도 지워집니다. 어떤 파일을 올려야
+하는지 따질 필요가 없습니다.
 
-서버를 새로 세팅해야 하면 (root 로):
+### `checkout -f main` 으로 하면 조용히 실패합니다
+
+한 번 당한 적이 있습니다. 이렇게 하면 **성공한 것처럼 보이는데 아무것도 안
+바뀝니다.**
+
+```bash
+# 이렇게 하지 마세요
+git --git-dir=/opt/namyeong.git fetch origin main
+git --git-dir=/opt/namyeong.git --work-tree=/opt/namyeong.dev checkout -f main
+```
+
+`git clone --bare` 는 fetch refspec 을 설정하지 않습니다. 그 상태에서
+`fetch origin main` 은 `FETCH_HEAD` 만 갱신하고 **로컬 `main` 브랜치는 그대로
+둡니다.** 그래서 뒤이은 `checkout -f main` 은 예전 위치의 `main` 을 다시
+체크아웃하며 `Already on 'main'` 만 찍습니다. 객체는 분명히 내려받았는데
+(`Unpacking objects...`) 사이트는 그대로인 상태가 됩니다.
+
+`reset --hard origin/main` 은 브랜치 ref 자체를 옮기므로 이 함정이 없습니다.
+
+### 서버를 새로 세팅해야 하면 (root 로)
 
 ```bash
 gh auth login            # web browser 방식, Git 인증도 Yes
 git clone --bare https://github.com/namyeong-dev/web.git /opt/namyeong.git
 git --git-dir=/opt/namyeong.git config core.bare false
-git --git-dir=/opt/namyeong.git --work-tree=/opt/namyeong.dev checkout -f main
+git --git-dir=/opt/namyeong.git config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
+git --git-dir=/opt/namyeong.git fetch origin
+git --git-dir=/opt/namyeong.git --work-tree=/opt/namyeong.dev reset --hard origin/main
 ```
+
+세 번째 줄(`remote.origin.fetch`)을 빼먹으면 위에 적은 함정에 그대로 빠집니다.
 
 배포 명령 등록:
 
 ```bash
-printf '#!/bin/sh\nset -e\ngit --git-dir=/opt/namyeong.git fetch origin main\ngit --git-dir=/opt/namyeong.git --work-tree=/opt/namyeong.dev checkout -f main\necho "배포 완료"\n' > /usr/local/bin/deploy-namyeong && chmod +x /usr/local/bin/deploy-namyeong
+printf '#!/bin/sh\nset -e\ngit --git-dir=/opt/namyeong.git fetch origin\ngit --git-dir=/opt/namyeong.git --work-tree=/opt/namyeong.dev reset --hard origin/main\necho "배포 완료: $(git --git-dir=/opt/namyeong.git log -1 --oneline main)"\n' > /usr/local/bin/deploy-namyeong && chmod +x /usr/local/bin/deploy-namyeong
 ```
 
-`checkout -f` 는 저장소에 없는 파일은 건드리지 않습니다. 예전에 손으로 올린
-잔여 파일을 정리하려면 `clean -nd` 로 목록을 먼저 확인하고 `-fd` 로 지우세요.
+`reset --hard` 는 저장소가 추적하지 않는 파일은 건드리지 않습니다. 예전에
+손으로 올린 잔여 파일을 정리하려면 `clean -nd` 로 목록을 먼저 확인하고
+`-fd` 로 지우세요.
+
+### 배포됐는지 확인
+
+```bash
+cd /opt/namyeong.dev && grep -o 'style.css?v=[0-9]*' index.html
+```
+
+`index.html` 의 `?v=` 가 방금 올린 값과 같으면 반영된 것입니다. 커밋으로도
+볼 수 있습니다: `git --git-dir=/opt/namyeong.git log -1 --oneline main`
 
 ### css 나 js 를 고쳤으면 `?v=` 를 올리세요
 
