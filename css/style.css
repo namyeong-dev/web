@@ -452,6 +452,9 @@ body.loaded .loader { opacity: 0; visibility: hidden; }
   justify-content: center;
   gap: 10px;
   padding: 14px 26px;
+  /* transparent by default so a bordered variant sitting next to a solid one
+     is not 2px taller than it */
+  border: 1px solid transparent;
   border-radius: 999px;
   font-weight: 700;
   font-size: 15px;
@@ -483,9 +486,8 @@ body.loaded .loader { opacity: 0; visibility: hidden; }
   border: 1px dashed rgba(223, 49, 52, 0.55);
   color: var(--red-soft);
   /* cursor 를 여기서 지정하면 .has-cursor * 의 cursor:none 을 덮어써서
-     커스텀 커서 위에 OS 커서가 겹쳐 보입니다. span 은 기본이 화살표라 불필요. */
-  font-size: 14px;
-  padding: 12px 20px;
+     커스텀 커서 위에 OS 커서가 겹쳐 보입니다. span 은 기본이 화살표라 불필요.
+     크기도 .btn 그대로 둡니다 — 옆의 App Store 버튼과 높이가 어긋나서요. */
 }
 
 /* 스토어 두 개를 한 줄에. .panel-copy > * 의 등장 순서를 흐트러뜨리지 않도록
@@ -1347,11 +1349,15 @@ body.loaded .ht-word { opacity: 1; transform: none; filter: blur(0); }
 .songalock-logo { height: 40px; width: auto; }
 .panel-songalock .panel-desc em { color: #FF8B85; font-weight: 700; }
 
-/* two real app screens, drifting apart as the panel scrubs */
+/* Two real app screens, drifting apart as the panel scrubs. The phones carry
+   this panel on their own, so it hands the wider half of the grid to them —
+   max-width was never the limit, the column was. */
+.panel-songalock .panel-grid { grid-template-columns: 0.86fr 1.14fr; }
+
 .phones {
   position: relative;
   width: 100%;
-  max-width: 540px;
+  max-width: 640px;
   margin: 0 auto;
   aspect-ratio: 1 / 0.94;
   transform: perspective(1200px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
@@ -1882,6 +1888,10 @@ body.loaded .ht-word { opacity: 1; transform: none; filter: blur(0); }
     top: 14svh;
     max-width: 440px;
   }
+
+  /* one column here, so the phones are free to take more of it */
+  .panel-songalock .panel-grid { grid-template-columns: 1fr; }
+  .phones { max-width: 520px; }
 
   .panel-index { font-size: 4.6rem; bottom: 12px; }
 
