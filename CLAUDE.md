@@ -39,7 +39,7 @@ deploy-namyeong
 
 ```bash
 gh auth login            # web browser 방식, Git 인증도 Yes
-git clone --bare https://github.com/songa-lock/namyeong.dev.git /opt/namyeong.git
+git clone --bare https://github.com/namyeong-dev/web.git /opt/namyeong.git
 git --git-dir=/opt/namyeong.git config core.bare false
 git --git-dir=/opt/namyeong.git --work-tree=/opt/namyeong.dev checkout -f main
 ```
