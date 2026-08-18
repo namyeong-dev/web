@@ -464,11 +464,12 @@
 
     ev.preventDefault();
     leaving = true;
+    sendOff(a.href, a.getBoundingClientRect(), getComputedStyle(a).backgroundColor);
+  });
 
-    const r = a.getBoundingClientRect();
-    const bg = getComputedStyle(a).backgroundColor;
-    const href = a.href;
-
+  /* The send-off itself, so anything can trigger it — a link click, or the
+     easter egg below. `from` is the box it grows out of. */
+  function sendOff(href, r, bg) {
     portalUrl.textContent = new URL(href).hostname.replace(/^www\./, '');
 
     // starts life as the thing that was clicked — same box, same pill radius,
@@ -519,7 +520,28 @@
         location.href = href;
       }
     }, OPEN_AT);
-  });
+  }
+
+  /* ── Easter egg ── */
+  /* 이동건's photo, clicked in a hurry. Deliberately undiscoverable by
+     accident: seven clicks with no more than 600ms between them. */
+  const egg = document.querySelector('[data-egg]');
+
+  if (egg && !reduced) {
+    let hits = 0;
+    let last = 0;
+
+    egg.addEventListener('click', () => {
+      if (leaving) return;
+      const now = performance.now();
+      hits = now - last < 600 ? hits + 1 : 1;
+      last = now;
+      if (hits < 7) return;
+      hits = 0;
+      leaving = true;
+      sendOff(egg.dataset.egg, egg.getBoundingClientRect(), '#fff');
+    });
+  }
 
   // the back button restores this page exactly as it was left — with the
   // window still up — so it has to be cleared on the way back in

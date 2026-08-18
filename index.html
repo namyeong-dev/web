@@ -21,7 +21,7 @@
   <!-- ?v= 는 캐시 무효화용입니다. 배포는 파일을 덮어쓰기만 하므로(scripts/deploy.sh),
        이 숫자를 올리지 않으면 재방문자는 예전 CSS/JS를 계속 씁니다. css/js 를
        고쳤으면 아래 두 곳의 숫자를 같이 올려주세요. -->
-  <link rel="stylesheet" href="css/style.css?v=6" />
+  <link rel="stylesheet" href="css/style.css?v=7" />
   <noscript>
     <style>
       .loader, .cursor { display: none; }
@@ -80,12 +80,20 @@
       <a href="#projects">프로젝트</a>
       <a href="#team">팀</a>
     </nav>
-    <a class="nav-insta" href="https://www.instagram.com/namyeong.dev/" target="_blank" rel="noopener" aria-label="인스타그램 @namyeong.dev">
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-        <rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/>
-      </svg>
-      <span>@namyeong.dev</span>
-    </a>
+    <div class="nav-social">
+      <a class="nav-insta" href="https://www.instagram.com/namyeong.dev/" target="_blank" rel="noopener" aria-label="인스타그램 @namyeong.dev">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/>
+        </svg>
+        <span>@namyeong.dev</span>
+      </a>
+      <a class="nav-insta" href="https://github.com/namyeong-dev" target="_blank" rel="noopener" aria-label="팀 GitHub">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" stroke="none" aria-hidden="true">
+          <path d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58 0-.29-.01-1.05-.02-2.06-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.21.09 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.8 5.63-5.48 5.92.43.37.81 1.1.81 2.22 0 1.6-.01 2.89-.01 3.28 0 .32.22.7.83.58C20.56 22.29 24 17.8 24 12.5 24 5.87 18.63.5 12 .5z"/>
+        </svg>
+        <span>GitHub</span>
+      </a>
+    </div>
     <span class="nav-progress" id="navProgress" aria-hidden="true"></span>
   </header>
 
@@ -359,14 +367,17 @@
            숨어 있는 동안에는 lazy 이미지가 아예 요청되지 않습니다. -->
       <ul class="team-grid">
         <li class="member tilt" data-reveal>
+          <div class="member-photo">
+            <img src="assets/team/lee-yoonho.jpg" alt="이윤호 프로필 사진" />
+          </div>
           <div class="member-meta">
             <span class="member-role member-role-lead">팀장</span>
             <h3 class="member-name">이윤호</h3>
             <p class="member-en">Lee Yoonho</p>
-            <ul class="member-work">
-              <li>개발 · 운영 · 인프라 전반</li>
-            </ul>
           </div>
+          <ul class="member-work">
+            <li>개발 · 운영 · 인프라 전반</li>
+          </ul>
           <div class="member-links">
             <a class="member-link" href="https://www.instagram.com/yoonho_0501" target="_blank" rel="noopener" aria-label="이윤호 인스타그램">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg>
@@ -380,14 +391,17 @@
           </div>
         </li>
         <li class="member tilt" data-reveal>
+          <div class="member-photo" data-egg="https://doumi.beetree.cc/easter/dg">
+            <img src="assets/team/lee-donggeon.png" alt="이동건 프로필 사진" />
+          </div>
           <div class="member-meta">
             <span class="member-role">팀원</span>
             <h3 class="member-name">이동건</h3>
             <p class="member-en">Lee Donggeon</p>
-            <ul class="member-work">
-              <li>기획 · 디자인 · 개발 전반</li>
-            </ul>
           </div>
+          <ul class="member-work">
+            <li>기획 · 디자인 · 개발 전반</li>
+          </ul>
           <div class="member-links">
             <a class="member-link" href="https://www.instagram.com/0x.3130/" target="_blank" rel="noopener" aria-label="이동건 인스타그램">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg>
@@ -402,21 +416,21 @@
             <span class="member-role">팀원</span>
             <h3 class="member-name">정수아</h3>
             <p class="member-en">Jeong Sua</p>
-            <ul class="member-work">
-              <li>Doumi 기획 · 로고 디자인</li>
-              <li>BeeTREE 로고 디자인</li>
-            </ul>
           </div>
+          <ul class="member-work">
+            <li>Doumi 기획 · 로고 디자인</li>
+            <li>BeeTREE 로고 디자인</li>
+          </ul>
         </li>
         <li class="member tilt" data-reveal>
           <div class="member-meta">
             <span class="member-role">팀원</span>
             <h3 class="member-name">서재연</h3>
             <p class="member-en">Seo Jaeyeon</p>
-            <ul class="member-work">
-              <li>BeeTREE 알고리즘 자문</li>
-            </ul>
           </div>
+          <ul class="member-work">
+            <li>BeeTREE 알고리즘 자문</li>
+          </ul>
           <div class="member-links">
             <a class="member-link" href="https://www.instagram.com/jaeyeon922/" target="_blank" rel="noopener" aria-label="서재연 인스타그램">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg>
@@ -460,6 +474,6 @@
     </div>
   </footer>
 
-  <script src="js/main.js?v=6" defer></script>
+  <script src="js/main.js?v=7" defer></script>
 </body>
 </html>

@@ -435,6 +435,12 @@ body.loaded .loader { opacity: 0; visibility: hidden; }
   white-space: nowrap;
 }
 
+.nav-social {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .nav-insta:hover { opacity: 1; }
 .nav[data-theme-now='dark'] .nav-insta:hover { background: rgba(255, 255, 255, 0.12); }
 .nav[data-theme-now='light'] .nav-insta:hover { background: rgba(0, 0, 0, 0.05); }
@@ -476,7 +482,8 @@ body.loaded .loader { opacity: 0; visibility: hidden; }
 .btn-red-ghost {
   border: 1px dashed rgba(223, 49, 52, 0.55);
   color: var(--red-soft);
-  cursor: default;
+  /* cursor 를 여기서 지정하면 .has-cursor * 의 cursor:none 을 덮어써서
+     커스텀 커서 위에 OS 커서가 겹쳐 보입니다. span 은 기본이 화살표라 불필요. */
   font-size: 14px;
   padding: 12px 20px;
 }
@@ -1360,12 +1367,14 @@ body.loaded .ht-word { opacity: 1; transform: none; filter: blur(0); }
     rotate 0.55s var(--ease);
 }
 
-/* heights are tuned against each file's own padding (the phone fills 92% of
-   iPhone02.png but only 86% of iPhone01.png) so the two read as one scene */
+/* Heights are tuned against each file's own padding so the two phones read as
+   one scene. Measured fill: before 86.3%, after 92.1% of its own canvas — the
+   values below cancel that difference out. Re-measure when a mockup changes
+   (the alpha bounding box is what matters, not the canvas size). */
 .phone-before {
   left: -6%;
   top: 0;
-  height: 73%;
+  height: 78%;
   z-index: 1;
   translate: 46px 34px;
   rotate: 5deg;
@@ -1374,7 +1383,7 @@ body.loaded .ht-word { opacity: 1; transform: none; filter: blur(0); }
 .phone-after {
   right: 0;
   bottom: 0;
-  height: 92%;
+  height: 86%;
   z-index: 2;
   translate: -46px -30px;
   rotate: -5deg;
@@ -1490,19 +1499,25 @@ body.loaded .ht-word { opacity: 1; transform: none; filter: blur(0); }
 }
 
 .team-grid {
-  max-width: 880px;
+  max-width: 860px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: clamp(14px, 2vw, 26px);
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(14px, 1.8vw, 20px);
 }
 
-/* a nameplate, not a photo card — the roster reads on its own */
+/* a nameplate, not a photo card — the roster reads on its own.
+   Photo sits beside the name rather than above it: two of the four have no
+   photo, and stacking would leave their cards with a hole where it would be.
+   Side by side the picture can be big without making any card taller. */
 .member {
   position: relative;
   display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas: 'meta' 'work' 'links';
   align-content: start;
-  gap: 14px;
+  column-gap: 16px;
+  row-gap: 13px;
   padding: 20px 18px 22px;
   border: 1px solid var(--hairline-light);
   border-radius: 18px;
@@ -1520,19 +1535,30 @@ body.loaded .ht-word { opacity: 1; transform: none; filter: blur(0); }
   box-shadow: 0 18px 40px rgba(11, 12, 112, 0.11);
 }
 
+.member-meta { grid-area: meta; }
+.member-work { grid-area: work; }
+.member-links { grid-area: links; }
+
 /* the frame only exists once a real photo loads (JS adds .has-photo) —
    see README for the file names */
 .member-photo { display: none; }
 
+.member.has-photo {
+  grid-template-columns: auto 1fr;
+  grid-template-areas: 'photo meta' 'work work' 'links links';
+}
+
+.member.has-photo .member-meta { align-self: center; }
+
 /* 카드 폭을 꽉 채우는 세로 사진이 아니라 아바타 크기입니다. 네 명 중 두
    명만 사진이 있어서, 큰 사진이면 카드끼리 높이가 크게 어긋납니다. */
 .member.has-photo .member-photo {
+  grid-area: photo;
   display: block;
   position: relative;
-  width: 64px;
-  /* README 가 권장하는 세로형 비율 그대로, 크기만 작게 */
+  width: clamp(78px, 8vw, 96px);
   aspect-ratio: 1 / 1.16;
-  border-radius: 14px;
+  border-radius: 15px;
   overflow: hidden;
   background: linear-gradient(150deg, var(--blue), var(--doumi));
 }
@@ -1560,6 +1586,8 @@ body.loaded .ht-word { opacity: 1; transform: none; filter: blur(0); }
 }
 
 .member:hover .member-photo img { transform: scale(1.055); }
+
+.member-photo:active { scale: 0.95; }
 
 .member-meta {
   display: grid;
@@ -1599,7 +1627,6 @@ body.loaded .ht-word { opacity: 1; transform: none; filter: blur(0); }
 /* what each person actually worked on. Everyone gets a line, so the roster
    reads as credits rather than a ranking — the scope itself is the difference. */
 .member-work {
-  margin-top: 9px;
   display: grid;
   gap: 3px;
   font-size: 11.5px;
@@ -1839,7 +1866,7 @@ body.loaded .ht-word { opacity: 1; transform: none; filter: blur(0); }
 
   .panel-index { font-size: 4.6rem; bottom: 12px; }
 
-  .team-grid { grid-template-columns: repeat(2, 1fr); max-width: 520px; }
+  .team-grid { max-width: 560px; }
 }
 
 @media (max-width: 760px) {
@@ -1907,9 +1934,8 @@ body.loaded .ht-word { opacity: 1; transform: none; filter: blur(0); }
 }
 
 @media (max-width: 470px) {
-  .team-grid { grid-template-columns: repeat(2, 1fr); max-width: 400px; gap: 12px; }
+  .team-grid { grid-template-columns: 1fr; max-width: 420px; gap: 12px; }
   .member { padding: 16px 14px 18px; border-radius: 15px; }
-  .member-name { font-size: 16px; }
   .marquee { margin-top: clamp(64px, 10vh, 110px); }
   .logo { --h: 74px; }
   .marquee-set { gap: 34px; padding-right: 34px; }
@@ -1921,7 +1947,7 @@ body.loaded .ht-word { opacity: 1; transform: none; filter: blur(0); }
   /* the wordmark no longer fits beside the links */
   .nav-logo-text { display: none; }
   .hero-cta { flex-direction: column; align-items: stretch; }
-  .team-grid { grid-template-columns: 1fr; max-width: 260px; }
+  .team-grid { max-width: 300px; }
 }
 
 /* ═══════════ Touch devices ═══════════ */

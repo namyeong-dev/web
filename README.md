@@ -66,10 +66,13 @@ python3 -m http.server 4173
 
 | 파일명 | 팀원 |
 |---|---|
-| `lee-yunho.jpg` | 이윤호 (팀장) |
-| `lee-donggeon.jpg` | 이동건 |
+| `lee-yoonho.jpg` | 이윤호 (팀장) |
+| `lee-donggeon.png` | 이동건 |
 | `jeong-sua.jpg` | 정수아 |
 | `seo-jaeyeon.jpg` | 서재연 |
+
+사진은 이름 옆에 들어가고 표시 크기가 96px 정도라, 원본이 크면 480px 정도로 줄여서
+넣으세요. 4MB 짜리를 그대로 두면 그 한 장이 페이지 전체보다 무겁습니다.
 
 사진이 없는 사람은 `<img>` 자체를 두지 않습니다. `loading="lazy"` 도 붙이지 않습니다.
 두 규칙 다 이유가 있어서, 자세한 건 [CLAUDE.md](CLAUDE.md#팀-사진) 에 적어 뒀습니다.
